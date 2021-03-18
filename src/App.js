@@ -1,8 +1,15 @@
+import React from "react";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
 
 function App() {
-  return <div className="App"></div>;
+  return (
+    <React.Fragment>
+      <Switch>
+        <Route exact path="/"></Route>
+      </Switch>
+    </React.Fragment>
+  );
 }
 
 export default App;
