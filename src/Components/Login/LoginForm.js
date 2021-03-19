@@ -19,11 +19,13 @@ const LoginForm = (props) => {
     handleSubmit,
     googleSignIn,
     fbSignIn,
-    signOut,
+    //signOut,
     handleBlur,
   } = props.events;
 
-  const { user, setUser, newUser, setNewUser } = props.userData;
+  //const { user, setUser, newUser, setNewUser } = props.userData;
+
+  //const { isSignedIn, name, email, error, success } = user;
 
   return (
     <Form

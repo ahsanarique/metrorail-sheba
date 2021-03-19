@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSubway } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "../../App";
 
 const Header = () => {
+  const [loggedInUser] = useContext(UserContext);
   const trainIcon = <FontAwesomeIcon icon={faSubway} />;
+
+  const { name, isSignedIn } = loggedInUser;
 
   return (
     <Navbar variant="dark" className="sticky-top p-5" bg="transparent">
@@ -33,11 +37,17 @@ const Header = () => {
           Contact
         </Link>
 
-        <Link to="/login">
-          <Button className="mx-2 px-5" variant="warning">
-            Login
-          </Button>
-        </Link>
+        {isSignedIn ? (
+          <Nav.Link className="mx-2">
+            <h5>{name}</h5>
+          </Nav.Link>
+        ) : (
+          <Link to="/login">
+            <Button className="mx-2 px-5" variant="warning">
+              Login
+            </Button>
+          </Link>
+        )}
       </Nav>
     </Navbar>
   );

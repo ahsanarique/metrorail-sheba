@@ -14,6 +14,8 @@ function App() {
   const [data, setData] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState([]);
 
+  console.log(loggedInUser);
+
   useEffect(() => {
     setData(fakeData);
   }, []);
