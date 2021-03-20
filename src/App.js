@@ -1,8 +1,8 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
-import fakeData from "./fakeData/fakeData";
 import Header from "./Components/Header/Header";
-import Home from "./Components/Home/Home";
+import { fakeData } from "./fakeData/fakeData";
+import TicketCard from "./Components/TicketCard/TicketCard";
 import Destination from "./Components/Destination/Destination";
 import Login from "./Components/Login/Login";
 import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
@@ -11,25 +11,37 @@ import "./App.css";
 export const UserContext = createContext();
 
 function App() {
-  const [data, setData] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState([]);
-
-  console.log(loggedInUser);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     setData(fakeData);
   }, []);
 
+  console.log(loggedInUser);
+
   return (
     <React.Fragment>
       <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
         <Header />
-        <div className="d-flex flex-column align-items-center">
+        <div className="d-flex flex-wrap align-items-center justify-content-center">
           <Switch>
             <Route exact path="/">
-              <Home data={data} />
+              <div className="container-fluid d-flex justify-content-center flex-wrap align-items-center mt-5">
+                {data.map((ticket) => (
+                  <div>
+                    <TicketCard
+                      key={ticket.id}
+                      id={ticket.id}
+                      banner={ticket.banner}
+                      price={ticket.price}
+                      type={ticket.type}
+                    ></TicketCard>
+                  </div>
+                ))}
+              </div>
             </Route>
-            <PrivateRoute path="/destination">
+            <PrivateRoute path="/destination=:id">
               <Destination />
             </PrivateRoute>
             <Route path="/login">

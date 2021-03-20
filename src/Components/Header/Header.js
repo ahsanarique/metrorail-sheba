@@ -10,7 +10,6 @@ import { UserContext } from "../../App";
 const Header = () => {
   const [loggedInUser] = useContext(UserContext);
   const trainIcon = <FontAwesomeIcon icon={faSubway} />;
-
   const { name, isSignedIn } = loggedInUser;
 
   return (
@@ -23,10 +22,6 @@ const Header = () => {
       <Nav className="ml-auto mr-2" variant="light">
         <Link className="nav-link mx-2" to="/">
           Home
-        </Link>
-
-        <Link className="nav-link mx-2" to="/destination">
-          Destination
         </Link>
 
         <Link className="nav-link mx-2" to="/blog">

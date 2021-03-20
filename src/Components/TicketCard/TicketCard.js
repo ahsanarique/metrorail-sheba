@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const TicketCard = (props) => {
-  const { type, banner, price } = props;
+  const { id, type, banner, price } = props;
 
   const cardStyle = {
     border: "none",
@@ -20,7 +20,7 @@ const TicketCard = (props) => {
           <h1 className="card-title">{type}</h1>
         </div>
         <div className="d-grid m-auto">
-          <Link to="/destination">
+          <Link to={`/destination=${id}`}>
             <button style={buttonRound} className="btn btn-warning btn-lg px-5">
               BUY NOW
             </button>

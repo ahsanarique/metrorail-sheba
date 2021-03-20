@@ -35,34 +35,20 @@ export const handleFbSignIn = () => {
   return firebase
     .auth()
     .signInWithPopup(fbProvider)
-    .then((result) => {
-      const user = result.user;
-      user.success = true;
-      return user;
+    .then((res) => {
+      const { displayName, email } = res.user;
+      const signedInUser = {
+        isSignedIn: true,
+        name: displayName,
+        email: email,
+        success: true,
+      };
+      return signedInUser;
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorCode, errorMessage);
-    });
-};
-
-export const handleSignOut = () => {
-  return firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      const signedOutUser = {
-        isSignedIn: false,
-        name: "",
-        email: "",
-        password: "",
-        success: false,
-      };
-      return signedOutUser;
-    })
-    .catch((err) => {
-      console.log(err.message);
     });
 };
 

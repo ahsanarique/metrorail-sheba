@@ -5,12 +5,15 @@ import {
   createUserWithEmailAndPassword,
   handleFbSignIn,
   handleGoogleSignIn,
-  handleSignOut,
   initializeLoginFramework,
   signInWithEmailAndPassword,
 } from "./loginManager";
 
-import LoginForm from "./LoginForm";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { faGoogle, faFacebookSquare } from "@fortawesome/free-brands-svg-icons";
 
 const Login = () => {
   const [newUser, setNewUser] = useState(false);
@@ -25,7 +28,8 @@ const Login = () => {
 
   initializeLoginFramework();
 
-  const [setLoggedInUser] = useContext(UserContext);
+  const [loggedInUser, setLoggedInUser] = useContext(UserContext);
+  console.log(loggedInUser);
   const history = useHistory();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: "/" } };
@@ -77,12 +81,6 @@ const Login = () => {
     });
   };
 
-  const signOut = () => {
-    handleSignOut().then((res) => {
-      handleResponse(res, false);
-    });
-  };
-
   const handleResponse = (res, redirect) => {
     setUser(res);
     setLoggedInUser(res);
@@ -91,22 +89,110 @@ const Login = () => {
     }
   };
 
-  const events = {
-    handleSubmit: handleSubmit,
-    googleSignIn: googleSignIn,
-    fbSignIn: fbSignIn,
-    signOut: signOut,
-    handleBlur: handleBlur,
+  const loginIcon = <FontAwesomeIcon icon={faSignInAlt} />;
+  const googleIcon = <FontAwesomeIcon icon={faGoogle} />;
+  const facebookIcon = <FontAwesomeIcon icon={faFacebookSquare} />;
+
+  const formStyle = {
+    width: "30rem",
   };
 
-  const userData = {
-    user: user,
-    setUser: setUser,
-    newUser: newUser,
-    setNewUser: setNewUser,
-  };
+  return (
+    <Form
+      onSubmit={handleSubmit}
+      style={formStyle}
+      className="text-white bg-dark p-4 rounded"
+    >
+      <h1 className="mb-3">{newUser ? "Create an Account" : "Login"}</h1>
+      {newUser && (
+        <Form.Group>
+          <Form.Control placeholder="Your name" type="text" required />
+        </Form.Group>
+      )}
+      <Form.Group controlId="formBasicEmail">
+        <Form.Label>Email address</Form.Label>
+        <Form.Control
+          type="email"
+          placeholder="Enter email"
+          onBlur={handleBlur}
+          required
+        />
+      </Form.Group>
 
-  return <LoginForm events={events} userData={userData} />;
+      <Form.Group controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type="password"
+          placeholder="Password"
+          onBlur={handleBlur}
+          required
+        />
+      </Form.Group>
+      {newUser && (
+        <Form.Group>
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Confirm Password"
+            onBlur={handleBlur}
+            required
+          />
+        </Form.Group>
+      )}
+
+      {!newUser && (
+        <Form.Group controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Remember Me" inline />
+          <Form.Label>
+            <Button className="ml-auto" size="sm" variant="outline-info">
+              Forgot Password
+            </Button>
+          </Form.Label>
+        </Form.Group>
+      )}
+
+      <Button
+        className="px-4 mt-4"
+        variant="warning"
+        type="submit"
+        size="lg"
+        block
+      >
+        <span className="mx-2">{loginIcon}</span>{" "}
+        {!newUser ? "Login" : "Create an Account"}
+      </Button>
+      <Form.Label className="mt-2">
+        {!newUser ? "Don't have an account?" : "Already have an account?"}
+        <Button
+          className="ml-4"
+          onClick={() => setNewUser(!newUser)}
+          size="sm"
+          variant="outline-info"
+        >
+          {!newUser ? "Create an account" : "Login"}
+        </Button>{" "}
+      </Form.Label>
+      <div>
+        {user.success ? (
+          <p style={{ color: "green" }}>
+            User {newUser ? "created" : "logged in"} successfully
+          </p>
+        ) : (
+          <p style={{ color: "red" }}>{user.error}</p>
+        )}
+      </div>
+
+      <div className="text-center my-4">
+        <h2 className="my-4">"OR"</h2>
+        <Button onClick={() => googleSignIn()} variant="info" size="lg" block>
+          <span className="mx-2">{googleIcon}</span> Continue with Google
+        </Button>
+        <Button onClick={() => fbSignIn()} variant="info" size="lg" block>
+          <span className="mx-2">{facebookIcon}</span> Continue with Facebook
+        </Button>
+      </div>
+    </Form>
+  );
 };
 
 export default Login;

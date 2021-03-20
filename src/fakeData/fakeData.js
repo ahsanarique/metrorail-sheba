@@ -1,4 +1,4 @@
-const fakeData = [
+export const fakeData = [
   {
     id: 1,
     type: "ONE TIME TICKET",
@@ -25,4 +25,21 @@ const fakeData = [
   },
 ];
 
-export default fakeData;
+export const stations = [
+  "Uttara North",
+  "Uttara Center",
+  "Uttara South",
+  "Pallabi",
+  "Mirpur 11",
+  "Mirpur 10",
+  "Kazipara",
+  "Shewrapara",
+  "Agargaon",
+  "Bijoy Sarani",
+  "Farmgate",
+  "Kawran Bazar",
+  "Shahbagh",
+  "Dhaka University",
+  "Bangladesh Secretariat",
+  "Motijheel",
+];
