@@ -34,23 +34,6 @@ const Login = () => {
   const location = useLocation();
   const { from } = location.state || { from: { pathname: "/" } };
 
-  const handleSubmit = (e) => {
-    if (newUser && user.email && user.password) {
-      createUserWithEmailAndPassword(user.name, user.email, user.password).then(
-        (res) => {
-          handleResponse(res, true);
-        }
-      );
-    }
-
-    if (!newUser && user.email && user.password) {
-      signInWithEmailAndPassword(user.email, user.password).then((res) => {
-        handleResponse(res, true);
-      });
-    }
-    e.preventDefault();
-  };
-
   const handleBlur = (e) => {
     let isFieldValid;
 
@@ -67,6 +50,23 @@ const Login = () => {
       newUserInfo[e.target.name] = e.target.value;
       setUser(newUserInfo);
     }
+  };
+
+  const handleSubmit = (e) => {
+    if (newUser && user.email && user.password) {
+      createUserWithEmailAndPassword(user.name, user.email, user.password).then(
+        (res) => {
+          handleResponse(res, true);
+        }
+      );
+    }
+
+    if (!newUser && user.email && user.password) {
+      signInWithEmailAndPassword(user.email, user.password).then((res) => {
+        handleResponse(res, true);
+      });
+    }
+    e.preventDefault();
   };
 
   const googleSignIn = () => {
@@ -97,6 +97,8 @@ const Login = () => {
     width: "30rem",
   };
 
+  console.log(user);
+
   return (
     <Form
       onSubmit={handleSubmit}
@@ -106,13 +108,19 @@ const Login = () => {
       <h1 className="mb-3">{newUser ? "Create an Account" : "Login"}</h1>
       {newUser && (
         <Form.Group>
-          <Form.Control placeholder="Your name" type="text" required />
+          <Form.Control
+            placeholder="Your name"
+            type="text"
+            name="name"
+            required
+          />
         </Form.Group>
       )}
       <Form.Group controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control
           type="email"
+          name="email"
           placeholder="Enter email"
           onBlur={handleBlur}
           required
@@ -123,6 +131,7 @@ const Login = () => {
         <Form.Label>Password</Form.Label>
         <Form.Control
           type="password"
+          name="password"
           placeholder="Password"
           onBlur={handleBlur}
           required
@@ -133,6 +142,7 @@ const Login = () => {
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"
+            name="password"
             placeholder="Confirm Password"
             onBlur={handleBlur}
             required
@@ -164,8 +174,10 @@ const Login = () => {
       <Form.Label className="mt-2">
         {!newUser ? "Don't have an account?" : "Already have an account?"}
         <Button
+          onClick={() => {
+            setNewUser(!newUser);
+          }}
           className="ml-4"
-          onClick={() => setNewUser(!newUser)}
           size="sm"
           variant="outline-info"
         >
@@ -181,7 +193,6 @@ const Login = () => {
           <p style={{ color: "red" }}>{user.error}</p>
         )}
       </div>
-
       <div className="text-center my-4">
         <h2 className="my-4">"OR"</h2>
         <Button onClick={() => googleSignIn()} variant="info" size="lg" block>

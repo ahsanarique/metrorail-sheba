@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import DestinationInput from "./DestinationInput";
+import GoogleMap from "../GoogleMap/GoogleMap";
 
 const Destination = () => {
   const [data, setData] = useState([]);
@@ -45,86 +46,91 @@ const Destination = () => {
   };
 
   return (
-    <div>
-      {!output && (
-        <Form
-          onSubmit={handleSubmit}
-          style={formStyle}
-          className="text-white bg-dark p-4 rounded"
-        >
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>From:</Form.Label>
-            <Form.Control
-              onChange={(e) => setFrom(e.target.value)}
-              as="select"
-              required
-            >
-              {stationNames.map((station) => (
-                <option key={station}>{station}</option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>To:</Form.Label>
-            <Form.Control
-              onChange={(e) => setTo(e.target.value)}
-              as="select"
-              required
-            >
-              {stationNames.map((station, idx) => (
-                <option key={idx}>{station}</option>
-              ))}
-            </Form.Control>
-            <Form.Row className="my-4">
-              <Col>
-                <Form.Label>Enter Date:</Form.Label>
-                <Form.Control
-                  onChange={(e) => setDate(e.target.value)}
-                  type="date"
-                  min="2021-04-01"
-                  max="2022-04-01"
-                  required
-                ></Form.Control>
-              </Col>
-              <Col>
-                <Form.Label>Enter Time:</Form.Label>
-                <Form.Control
-                  onChange={(e) => setTime(e.target.value)}
-                  type="time"
-                  required
-                />
-              </Col>
-            </Form.Row>
-          </Form.Group>
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>Enter Amount</Form.Label>
-            <Form.Control
-              onChange={(e) => setAmount(e.target.value)}
-              type="number"
-              defaultValue="1"
-              min="1"
-              max="10"
-            />
-          </Form.Group>
-          <Button
-            className="my-4"
-            variant="warning"
-            type="submit"
-            size="bg"
-            block
+    <React.Fragment>
+      <div>
+        {!output && (
+          <Form
+            onSubmit={handleSubmit}
+            style={formStyle}
+            className="text-white bg-dark p-4 rounded"
           >
-            Update
-          </Button>
-        </Form>
-      )}
-      {output && (
-        <DestinationInput
-          data={data[0]}
-          setOutput={setOutput}
-          inputData={inputData}
-        />
-      )}
-    </div>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>From:</Form.Label>
+              <Form.Control
+                onChange={(e) => setFrom(e.target.value)}
+                as="select"
+                required
+              >
+                {stationNames.map((station) => (
+                  <option key={station}>{station}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>To:</Form.Label>
+              <Form.Control
+                onChange={(e) => setTo(e.target.value)}
+                as="select"
+                required
+              >
+                {stationNames.map((station, idx) => (
+                  <option key={idx}>{station}</option>
+                ))}
+              </Form.Control>
+              <Form.Row className="my-4">
+                <Col>
+                  <Form.Label>Enter Date:</Form.Label>
+                  <Form.Control
+                    onChange={(e) => setDate(e.target.value)}
+                    type="date"
+                    min="2021-04-01"
+                    max="2022-04-01"
+                    required
+                  ></Form.Control>
+                </Col>
+                <Col>
+                  <Form.Label>Enter Time:</Form.Label>
+                  <Form.Control
+                    onChange={(e) => setTime(e.target.value)}
+                    type="time"
+                    required
+                  />
+                </Col>
+              </Form.Row>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>Enter Amount</Form.Label>
+              <Form.Control
+                onChange={(e) => setAmount(e.target.value)}
+                type="number"
+                defaultValue="1"
+                min="1"
+                max="10"
+              />
+            </Form.Group>
+            <Button
+              className="my-4"
+              variant="warning"
+              type="submit"
+              size="bg"
+              block
+            >
+              Update
+            </Button>
+          </Form>
+        )}
+        {output && (
+          <DestinationInput
+            data={data[0]}
+            setOutput={setOutput}
+            inputData={inputData}
+          />
+        )}
+      </div>
+      <div className="m-5">
+        <GoogleMap />
+      </div>
+    </React.Fragment>
   );
 };
 
