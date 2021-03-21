@@ -26,6 +26,8 @@ const Login = () => {
     success: false,
   });
 
+  console.log(user); // preventing a netlify deployment error.
+
   const [formData, updateFormData] = useState({});
   const [passwordError, setPasswordError] = useState("");
 
@@ -97,8 +99,6 @@ const Login = () => {
   const formStyle = {
     width: "30rem",
   };
-
-  console.log(user);
 
   return (
     <div className="text-white bg-dark mt-4 p-4 rounded">
