@@ -11,9 +11,10 @@ const Header = () => {
   const [loggedInUser] = useContext(UserContext);
   const trainIcon = <FontAwesomeIcon icon={faSubway} />;
   const { name, isSignedIn } = loggedInUser;
+  console.log(loggedInUser.displayName);
 
   return (
-    <Navbar variant="dark" className="sticky-top p-5" bg="transparent">
+    <Navbar variant="dark" className="sticky-top p-4" bg="transparent">
       <Link to="/">
         <Navbar.Brand>
           <h4>{trainIcon} MetroRail Sheba</h4>

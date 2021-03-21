@@ -18,8 +18,6 @@ function App() {
     setData(fakeData);
   }, []);
 
-  console.log(loggedInUser);
-
   return (
     <React.Fragment>
       <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>

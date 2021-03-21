@@ -26,47 +26,48 @@ const Login = () => {
     success: false,
   });
 
+  const [formData, updateFormData] = useState({});
+  const [passwordError, setPasswordError] = useState("");
+
   initializeLoginFramework();
 
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
-  console.log(loggedInUser);
+
   const history = useHistory();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: "/" } };
 
-  const handleBlur = (e) => {
-    let isFieldValid;
-
-    if (e.target.name === "email") {
-      isFieldValid = /\S+@\S+\.\S+/.test(e.target.value);
-    }
-    if (e.target.name === "password") {
-      const validPassword = e.target.value.length > 6;
-      const passwordHasNumber = /\d{1}/.test(e.target.value);
-      isFieldValid = validPassword && passwordHasNumber;
-    }
-    if (isFieldValid) {
-      const newUserInfo = { ...user };
-      newUserInfo[e.target.name] = e.target.value;
-      setUser(newUserInfo);
-    }
+  const handleChange = (e) => {
+    updateFormData({
+      ...formData,
+      [e.target.name]: e.target.value.trim(),
+    });
   };
 
   const handleSubmit = (e) => {
-    if (newUser && user.email && user.password) {
-      createUserWithEmailAndPassword(user.name, user.email, user.password).then(
+    e.preventDefault();
+
+    if (formData.password === formData.confirmPassword) {
+      if (newUser && formData.email && formData.password) {
+        createUserWithEmailAndPassword(
+          formData.name,
+          formData.email,
+          formData.password
+        ).then((res) => {
+          handleResponse(res, true);
+        });
+      }
+    } else {
+      setPasswordError("Password doesn't match.");
+    }
+
+    if (!newUser && formData.email && formData.password) {
+      signInWithEmailAndPassword(formData.email, formData.password).then(
         (res) => {
           handleResponse(res, true);
         }
       );
     }
-
-    if (!newUser && user.email && user.password) {
-      signInWithEmailAndPassword(user.email, user.password).then((res) => {
-        handleResponse(res, true);
-      });
-    }
-    e.preventDefault();
   };
 
   const googleSignIn = () => {
@@ -100,99 +101,103 @@ const Login = () => {
   console.log(user);
 
   return (
-    <Form
-      onSubmit={handleSubmit}
-      style={formStyle}
-      className="text-white bg-dark p-4 rounded"
-    >
-      <h1 className="mb-3">{newUser ? "Create an Account" : "Login"}</h1>
-      {newUser && (
-        <Form.Group>
+    <div className="text-white bg-dark mt-4 p-4 rounded">
+      {!loggedInUser.success && (
+        <p className="text-danger">{loggedInUser.error}</p>
+      )}
+      {newUser && <p className="text-danger">{passwordError}</p>}
+      <Form onSubmit={handleSubmit} style={formStyle}>
+        <h1 className="mb-3">{newUser ? "Create an Account" : "Login"}</h1>
+        {newUser && (
+          <Form.Group>
+            <Form.Label>Name:</Form.Label>
+            <Form.Control
+              placeholder="Your name"
+              type="text"
+              pattern="^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$"
+              name="name"
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+        )}
+
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Email Address:</Form.Label>
           <Form.Control
-            placeholder="Your name"
-            type="text"
-            name="name"
+            type="email"
+            name="email"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+            placeholder="Enter email"
+            onChange={handleChange}
             required
           />
         </Form.Group>
-      )}
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          type="email"
-          name="email"
-          placeholder="Enter email"
-          onBlur={handleBlur}
-          required
-        />
-      </Form.Group>
 
-      <Form.Group controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          name="password"
-          placeholder="Password"
-          onBlur={handleBlur}
-          required
-        />
-      </Form.Group>
-      {newUser && (
-        <Form.Group>
-          <Form.Label>Confirm Password</Form.Label>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Password:</Form.Label>
           <Form.Control
             type="password"
             name="password"
-            placeholder="Confirm Password"
-            onBlur={handleBlur}
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+            title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+            placeholder="Password"
+            minLength="8"
+            onChange={handleChange}
             required
           />
         </Form.Group>
-      )}
 
-      {!newUser && (
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Remember Me" inline />
-          <Form.Label>
+        {newUser && (
+          <Form.Group controlId="formBasicPassword">
+            <Form.Label>Confirm Password:</Form.Label>
+            <Form.Control
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+              title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+        )}
+
+        {!newUser && (
+          <Form.Group>
+            <Form.Check type="checkbox" label="Remember Me" inline />
+
             <Button className="ml-auto" size="sm" variant="outline-info">
               Forgot Password
             </Button>
-          </Form.Label>
-        </Form.Group>
-      )}
-
-      <Button
-        className="px-4 mt-4"
-        variant="warning"
-        type="submit"
-        size="lg"
-        block
-      >
-        <span className="mx-2">{loginIcon}</span>{" "}
-        {!newUser ? "Login" : "Create an Account"}
-      </Button>
-      <Form.Label className="mt-2">
-        {!newUser ? "Don't have an account?" : "Already have an account?"}
-        <Button
-          onClick={() => {
-            setNewUser(!newUser);
-          }}
-          className="ml-4"
-          size="sm"
-          variant="outline-info"
-        >
-          {!newUser ? "Create an account" : "Login"}
-        </Button>{" "}
-      </Form.Label>
-      <div>
-        {user.success ? (
-          <p style={{ color: "green" }}>
-            User {newUser ? "created" : "logged in"} successfully
-          </p>
-        ) : (
-          <p style={{ color: "red" }}>{user.error}</p>
+          </Form.Group>
         )}
-      </div>
+
+        <Button
+          className="px-4 mt-4"
+          variant="warning"
+          type="submit"
+          size="lg"
+          block
+        >
+          <span className="mx-2">{loginIcon}</span>{" "}
+          {!newUser ? "Login" : "Create an Account"}
+        </Button>
+        <div className="mt-2">
+          {!newUser ? "Don't have an account?" : "Already have an account?"}
+          <Button
+            onClick={() => {
+              setNewUser(!newUser);
+            }}
+            className="ml-4"
+            size="sm"
+            variant="outline-warning"
+          >
+            {!newUser ? "Create an account" : "Login"}
+          </Button>{" "}
+        </div>
+      </Form>
+
       <div className="text-center my-4">
         <h2 className="my-4">"OR"</h2>
         <Button onClick={() => googleSignIn()} variant="info" size="lg" block>
@@ -202,7 +207,7 @@ const Login = () => {
           <span className="mx-2">{facebookIcon}</span> Continue with Facebook
         </Button>
       </div>
-    </Form>
+    </div>
   );
 };
 

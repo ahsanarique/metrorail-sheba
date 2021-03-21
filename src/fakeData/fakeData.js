@@ -26,6 +26,7 @@ export const fakeData = [
 ];
 
 export const stations = [
+  "Select a Station",
   "Uttara North",
   "Uttara Center",
   "Uttara South",

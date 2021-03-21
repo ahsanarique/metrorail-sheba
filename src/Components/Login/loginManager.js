@@ -24,8 +24,11 @@ export const handleGoogleSignIn = () => {
       };
       return signedInUser;
     })
-    .catch((err) => {
-      console.log(err.message);
+    .catch((error) => {
+      const signedInUser = {
+        error: error.message,
+      };
+      return signedInUser;
     });
 };
 
@@ -46,9 +49,10 @@ export const handleFbSignIn = () => {
       return signedInUser;
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
+      const signedInUser = {
+        error: error.message,
+      };
+      return signedInUser;
     });
 };
 
@@ -60,12 +64,14 @@ export const createUserWithEmailAndPassword = (name, email, password) => {
       const newUserInfo = res.user;
       newUserInfo.error = "";
       newUserInfo.success = true;
+      newUserInfo.isSignedIn = true;
       updateUserName(name);
       return newUserInfo;
     })
     .catch((error) => {
-      const newUserInfo = {};
-      newUserInfo.error = error.message;
+      const newUserInfo = {
+        error: error.message,
+      };
       newUserInfo.success = false;
       return newUserInfo;
     });
@@ -78,12 +84,13 @@ export const signInWithEmailAndPassword = (email, password) => {
     .then((res) => {
       const newUserInfo = res.user;
       newUserInfo.error = "";
-      newUserInfo.success = true;
+      newUserInfo.isSignedIn = true;
       return newUserInfo;
     })
     .catch((error) => {
-      const newUserInfo = {};
-      newUserInfo.error = error.message;
+      const newUserInfo = {
+        error: error.message,
+      };
       newUserInfo.success = false;
       return newUserInfo;
     });
